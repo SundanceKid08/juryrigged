@@ -18,21 +18,19 @@ function love.load()
 
     math.randomseed(os.time())
 
-
-
     gStateMachine = StateMachine {
-        ['start'] = function() return StartState() end
+        ['start'] = function() return StartState() end,
+        ['play'] = function() return PlayState() end
     }
+    
+    gSounds['jazz']:setLooping(true)
+    gSounds['jazz']:setVolume(0.5)
+    gSounds['jazz']:play()
 
- 
     gStateMachine:change('start')
 
     love.keyboard.keysPressed = {}
-
 end
-
-
-
 
 function love.keypressed(key)
     if key == 'escape' then

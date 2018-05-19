@@ -1,9 +1,11 @@
 
 
-StartState = Class{__includes = BaseState}
+PlayState = Class{__includes = BaseState}
 
-function StartState:init()
+function PlayState:init()
     cursorPositions = {}
+    canvasPositions = {}
+    paused = false
     --x,y = love.mouse.getPosition()
     --table.insert(cursorPositions, {x,y})
     
@@ -16,23 +18,49 @@ function StartState:init()
     love.graphics.setCanvas()
 end
 
-function StartState:update(dt)
-    if love.mouse.isDown(1) then
+function PlayState:update(dt)
+
+
+    if love.mouse.isDown(1) and not paused then
         x,y = love.mouse.getPosition()
-        table.insert(cursorPositions,x)
-        table.insert(cursorPositions,y)
+        table.insert(cursorPositions, {x,y})
     end
+
+    if #cursorPositions > 100 then
+        
+        paused = true
+    end
+
+    if paused then
+        if love.keyboard.wasPressed('return') then
+            paused = false
+            cursorPositions = {}
+        end
+    end
+
+    for k,v in ipairs(cursorPositions) do 
+        table.insert(canvasPositions, v) 
+    end
+    
 end
 
-function StartState:render()
+function PlayState:render()
     width, height = love.window.getDesktopDimensions()
     love.graphics.setColor(255,255,255,255)
     love.graphics.print(tostring(#cursorPositions), 100, 100)
     love.graphics.rectangle('fill',(width/2) - 250,(height/2) - 250,500,500)
-    love.graphics.setColor(0,255,0,255)
-    for p, position in pairs(cursorPositions) do 
+    love.graphics.setColor(0,0,0,255)
+    for p, position in ipairs(canvasPositions) do 
         if p ~= #cursorPositions then
-            love.graphics.rectangle('fill',cursorPositions[p],cursorPositions[p+1],8,8)
+            xp = position[1]
+            yp = position[2]
+        
+            love.graphics.rectangle('fill', xp, yp, 8, 8)
         end
+    end
+
+    if paused then
+        --love.graphics.setFont(gFonts['medium'])
+        love.graphics.print('SWITCH PLAYERS', width/2,height/2)
     end
 end
