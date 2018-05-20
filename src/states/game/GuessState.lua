@@ -30,6 +30,8 @@ function GuessState:render()
     love.graphics.setColor(255,255,255,255)
     love.graphics.print(tostring(#cursorPositions), 100, 100)
     love.graphics.rectangle('fill',(width/2) - 250,(height/2) - 250,500,500)
+    love.graphics.circle('fill', (width/2) - 400, height - 400, 100)
+    love.graphics.circle('fill', (width/2) + 400, height - 400, 100)
     love.graphics.setColor(0,0,0,255)
     for p, position in ipairs(drawing) do 
         if p ~= #cursorPositions then

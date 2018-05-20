@@ -23,7 +23,7 @@ gSounds = {
 }
 
 gTextures = {
-   
+    ['desk'] = love.graphics.newImage('graphics/misstrialdesktexture.png')
 }
 
 gFrames = {
@@ -32,8 +32,7 @@ gFrames = {
 
 
 gFonts = {
-    gFonts = {
-        ['medium'] = love.graphics.newFont('fonts/KeepCalm-Medium.ttf', 16)
-    }
-    
+    ['medium'] = love.graphics.newFont('fonts/CapitalisTypOasis.ttf', 16),
+    ['large'] = love.graphics.newFont('fonts/CapitalisTypOasisLarge.ttf', 32),   
+    ['digital'] = love.graphics.newFont('fonts/DS-DIGIT.TTF',32)
 }

@@ -8,9 +8,11 @@ function PlayState:init(defs)
     paused = false
     rounds = 0
     inkAllowed = 100
+    
     xc, yc = love.mouse.getPosition()
-    --x,y = love.mouse.getPosition()
-    --table.insert(cursorPositions, {x,y})
+    self.limit = 10
+    self.start = 0
+ 
     
     -- Draws canvas
     canvas = love.graphics.newCanvas(500, 500)
@@ -37,12 +39,16 @@ function PlayState:update(dt)
 
     if not paused then
         if love.mouse.isDown(1) then
+            if self.start == 0 then
+                self.start = love.timer.getTime()
+            end
             x,y = love.mouse.getPosition()
             table.insert(cursorPositions, {x,y})
         end
 
         if #cursorPositions > inkAllowed then
             rounds = rounds + 1
+            self.start = 0
             paused = true
         end
 
@@ -51,17 +57,20 @@ function PlayState:update(dt)
         end
     end
 
-    xc, yc = love.mouse.getPosition()
+    
 
 end
 
 function PlayState:render()
     width, height = love.window.getDesktopDimensions()
+    
     love.graphics.setColor(255,255,255,255)
     love.graphics.print(tostring(#cursorPositions), 100, 100)
+    love.graphics.draw(gTextures['desk'], 0 ,0)
     love.graphics.rectangle('fill',(width/2) - 250,(height/2) - 250,500,500)
-    love.graphics.rectangle('fill',(width/2) - 402,(height) - 102,250,100)
-    love.graphics.rectangle('fill',(width/2) - 102,(height) - 102,250,100)
+    love.graphics.rectangle('fill',(width/2) - 402 + 30,(height) - 172,250,100)
+    love.graphics.rectangle('fill',(width/2) - 2,(height) - 172,250,100)
+    
     love.graphics.setColor(0,0,0,255)
     for p, position in ipairs(canvasPositions) do 
         if p ~= #cursorPositions then
@@ -71,17 +80,43 @@ function PlayState:render()
         end
     end
 
-    love.graphics.setColor(0,0,0,255)
-    if xc > (width/2) - 400 or xc < (width/2) - 400 + 300 and yc < (height-100) or yc > height then
-        
-            love.graphics.rectangle('fill',(width/2) - 400,(height) - 100,245,95)
-    
+    if self.start > 0 then
+        love.graphics.setColor(255,0,0,255)
+        love.graphics.setFont(gFonts['digital'])
+        love.graphics.print(tostring(self.limit - self:round(self:milliseconds_to_seconds(love.timer.getTime() - self.start)), 200, 200))
     end
-        love.graphics.rectangle('fill',(width/2) - 100,(height) - 100,245,95)
+
+    love.graphics.setColor(0,0,0,255)
+    if not self:isHover((width/2) - 400 + 30, height - 172, 245, 95) then
+        love.graphics.rectangle('fill',(width/2) - 400 + 30,(height) - 172,245,95)
+    end
+    if not self:isHover(width/2, height - 172, 245, 95) then
+        love.graphics.rectangle('fill',(width/2), height - 172,245,95)
+    end
 
     if paused then
-        --love.graphics.setFont(gFonts['medium'])
-        love.graphics.print('SWITCH PLAYERS', width/2,height/2)
+        love.graphics.setFont(gFonts['large'])
+        love.graphics.print('SWITCH PLAYERS', (width/2) - 150,height/2 - 200)
     end
 end
 
+function PlayState:isHover(x,y,width,height)
+    xc, yc = love.mouse.getPosition()
+    if xc > x and xc < x + width then
+        if yc > y and yc < y + height then
+            return true
+        end
+    end
+    return false
+end
+
+function PlayState:milliseconds_to_seconds(milliseconds)
+    seconds = milliseconds % 1000
+    return seconds
+end
+
+function PlayState:round(num, numDecimalPlaces)
+    local mult = 10^(numDecimalPlaces or 0)
+    return math.floor(num * mult + 0.5) / mult
+  end
+  
