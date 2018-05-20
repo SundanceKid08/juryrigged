@@ -20,7 +20,8 @@ function love.load()
 
     gStateMachine = StateMachine {
         ['start'] = function() return StartState() end,
-        ['play'] = function() return PlayState() end
+        ['play'] = function() return PlayState() end,
+        ['guess'] = function() return GuessState() end
     }
     
     gSounds['jazz']:setLooping(true)
