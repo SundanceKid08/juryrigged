@@ -15,9 +15,10 @@ function GuessState:init()
     love.graphics.setBlendMode('alpha')
     love.graphics.setCanvas()
 
-    modifiers = {
-        [1] = true,
-        [2] = true
+    self.modifiers = {
+        [1] = "invisible",
+        [2] = "limited",
+        [3] = "lefthand"
     }
 end
 
@@ -29,7 +30,7 @@ function GuessState:update(dt)
     if self:isHover((width/2) - 400 -100, height - 400 + 50, 100, 100) then
         if love.mouse.isDown(1) then
             gStateMachine:change('play',{
-                modifier = modifiers[math.random(1,4)]
+                modifier = self.modifiers[love.math.random(1,3)]
             })
         end
     end
@@ -37,7 +38,7 @@ function GuessState:update(dt)
     if self:isHover((width/2) + 400 + 100, height - 400 + 50, 100, 100) then
         if love.mouse.isDown(1) then
             gStateMachine:change('play',{
-                modifier = modifiers[math.random(1,4)]
+                modifier = self.modifiers[love.math.random(1,3)]
             })
         end
     end

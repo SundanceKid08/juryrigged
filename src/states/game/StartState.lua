@@ -14,7 +14,7 @@ function StartState:update(dt)
 
     if love.keyboard.wasPressed('return') then
         gStateMachine:change('play', {
-            modifier = false
+            modifier = nil
         })
     end
   

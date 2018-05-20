@@ -5,18 +5,16 @@ PlayState = Class{__includes = BaseState}
 function PlayState:init(defs)
     cursorPositions = {}
     canvasPositions = {}
-    invisibleInk = true
-
-    paused = false
-    rounds = 1
-    inkAllowed = 500
+    self.invisibleInk = false
+    self.paused = false
+    inkAllowed = 1000
+    self.roundLimit = 2
+    self.rounds = 1
+    self.stopwatch = 1
+    self.start = 0
+    self.timelimit = 12
     
     xc, yc = love.mouse.getPosition()
-    self.roundLimit = 2
-    self.limit = 10
-    self.start = 0
-    self.stopwatch = 1
-    
     -- Draws canvas
     canvas = love.graphics.newCanvas(500, 500)
     love.graphics.setCanvas(canvas)
@@ -24,31 +22,56 @@ function PlayState:init(defs)
     love.graphics.setBlendMode('alpha')
     love.graphics.setCanvas()
 
-    leftClue = cards['crimes'][math.random(1,10)]
-    rightClue = cards['nouns'][math.random(1,10)]
+    rightClue = cards['crimes'][math.random(1,10)]
+    leftClue = cards['nouns'][math.random(1,10)]
 end
 
 function PlayState:enter(defs)
     self.modifier = defs.modifier
-    rounds = 1
+    self.rounds = 1
+    self.roundLimit = 3
+    self.timelimit = 15
+    self.start = 0
+    self.stopwatch = 1
+    self.paused = true
+    if self.modifier then
+        if self.modifier == 'invisible' then
+            self.invisibleink  = true
+            self.limited = false
+            self.leftHand = false
+            inkAllowed = 5000
+        elseif self.modifier == 'limited' then
+            self.limited = true
+            self.invisibleink = false
+            self.leftHand = false
+            inkAllowed = 269    --GIGGITY GIGGITY
+        elseif self.modifier == 'lefthand' then
+            self.leftHand = true
+            self.invisibleink = false
+            self.limited = false
+            inkAllowed = 5000
+        end
+    end
 end
 
 function PlayState:update(dt)
 
-    if paused then
+    if self.paused then
         if love.keyboard.wasPressed('return') then
-            paused = false
+            self.rounds = self.rounds + 1
+            self.stopwatch = 1
+            self.paused = false
             cursorPositions = {}
         end
 
-        if rounds > self.roundLimit then
+        if self.rounds > self.roundLimit then
             gStateMachine:change('guess', {
                 drawing = canvasPositions
             })
         end
     end
 
-    if not paused then
+    if not self.paused then
         if love.mouse.isDown(1) then
             if self.start == 0 then
                 self.start = love.timer.getTime()
@@ -61,13 +84,12 @@ function PlayState:update(dt)
         end
 
         if love.mouse.wasPressed(1) or self.start > 0 then
-            self.stopwatch = self.limit - self:round(self:milliseconds_to_seconds(love.timer.getTime() - self.start))
+            self.stopwatch = self.timelimit - self:round(self:milliseconds_to_seconds(love.timer.getTime() - self.start))
         end
 
         if #cursorPositions > inkAllowed or self.stopwatch < 0 then
-            rounds = rounds + 1
             self.start = 0
-            paused = true
+            self.paused = true
         end
         
         for k,v in ipairs(cursorPositions) do 
@@ -82,18 +104,25 @@ function PlayState:render()
     love.graphics.setColor(255,255,255,255)
     love.graphics.print(tostring(#cursorPositions), 100, 100)
     love.graphics.draw(gTextures['desk'], 0 ,0)
-    --love.graphics.draw(gTextures['coffeespill'],0,0)
+    if self.invisibleInk then
+        love.graphics.draw(gTextures['invisibleink'])
+    elseif self.limited then
+        love.graphics.draw(gTextures['limitedink'])
+    elseif self.leftHand then
+        love.graphics.draw(gTextures['lefthand'])
+    end
+    
     love.graphics.rectangle('fill',(width/2) - 250,(height/2) - 250,500,500)
     love.graphics.rectangle('fill',(width/2) - 402 + 30,(height) - 172,250,100)
     love.graphics.rectangle('fill',(width/2) - 2,(height) - 172,250,100)
-
+    
     
     
     love.graphics.setColor(0,0,0,255)
     love.graphics.setFont(gFonts['small'])
     love.graphics.print(leftClue,(width/2) - 402 + 30 + 20, (height) - 172 + 50)
     love.graphics.print(rightClue,(width/2) - 2 + 20,(height) - 172 + 50)
-    if not invisibleInk then
+    if not self.invisibleInk then
         for p, position in ipairs(canvasPositions) do 
             if p ~= #cursorPositions then
                 xp = position[1]
@@ -126,9 +155,9 @@ function PlayState:render()
         love.graphics.rectangle('fill',(width/2), height - 172,245,95)
     end
 
-    if paused then
+    if self.paused then
         love.graphics.setFont(gFonts['large'])
-        love.graphics.print('SWITCH PLAYERS', (width/2) - 150,height/2 - 200)
+        love.graphics.print('Press Enter To Start Turn', (width/2) - 300,height/2 - 200)
     end
 end
 

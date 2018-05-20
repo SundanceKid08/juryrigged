@@ -28,7 +28,10 @@ gTextures = {
     ['no'] = love.graphics.newImage('graphics/xbtn.png'),
     ['coffeespill'] = love.graphics.newImage('graphics/coffeespill.png'),
     ['main'] = love.graphics.newImage('graphics/misstrialrulesmenu.png'),
-    ['judge'] = love.graphics.newImage('graphics/judgeDesk.png')
+    ['judge'] = love.graphics.newImage('graphics/judgeDesk.png'),
+    ['invisibleink'] = love.graphics.newImage('graphics/disappearinginkmodifire.png'),
+    ['lefthand'] = love.graphics.newImage('graphics/lefthandmodifire.png'),
+    ['limitedink'] = love.graphics.newImage('graphics/limitedinkmodifire.png')
 }
 
 gFrames = {
