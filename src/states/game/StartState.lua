@@ -13,7 +13,9 @@ end
 function StartState:update(dt)
 
     if love.keyboard.wasPressed('return') then
-        gStateMachine:change('play')
+        gStateMachine:change('play', {
+            modifier = false
+        })
     end
   
 end
@@ -21,7 +23,7 @@ end
 function StartState:render()
     
     love.graphics.setColor(255,255,255,255)
-
+    love.graphics.draw(gTextures['main'])
 
     --love.graphics.setFont(gFonts['medium'])
     love.graphics.print('WELCOME TO JURY SELECTION', 100, 100)

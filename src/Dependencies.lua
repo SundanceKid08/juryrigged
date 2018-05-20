@@ -23,7 +23,12 @@ gSounds = {
 }
 
 gTextures = {
-    ['desk'] = love.graphics.newImage('graphics/misstrialdesktexture.png')
+    ['desk'] = love.graphics.newImage('graphics/misstrialdesktexture.png'),
+    ['yes'] = love.graphics.newImage('graphics/vbtn.png'),
+    ['no'] = love.graphics.newImage('graphics/xbtn.png'),
+    ['coffeespill'] = love.graphics.newImage('graphics/coffeespill.png'),
+    ['main'] = love.graphics.newImage('graphics/misstrialrulesmenu.png'),
+    ['judge'] = love.graphics.newImage('graphics/judgeDesk.png')
 }
 
 gFrames = {
@@ -32,6 +37,7 @@ gFrames = {
 
 
 gFonts = {
+    ['small'] = love.graphics.newFont('fonts/CapitalisTypOasisSmall.ttf', 8),
     ['medium'] = love.graphics.newFont('fonts/CapitalisTypOasis.ttf', 16),
     ['large'] = love.graphics.newFont('fonts/CapitalisTypOasisLarge.ttf', 32),   
     ['digital'] = love.graphics.newFont('fonts/DS-DIGIT.TTF',32)

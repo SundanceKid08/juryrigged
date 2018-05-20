@@ -31,6 +31,11 @@ function love.load()
     gStateMachine:change('start')
 
     love.keyboard.keysPressed = {}
+    love.mouse.keysPressed = {}
+end
+
+function love.mouse.wasPressed(key)
+    return love.mouse.keysPressed[key]
 end
 
 function love.keypressed(key)
@@ -49,8 +54,14 @@ function love.update(dt)
     gStateMachine:update(dt)
 
     love.keyboard.keysPressed = {}
+    love.mouse.keysPressed = {}
 end
 
 function love.draw()
     gStateMachine:render()
+end
+
+-- Clamps a number to within a certain range, with optional rounding
+function math.clamp(low, n, high) 
+    return math.min(math.max(n, low), high) 
 end
