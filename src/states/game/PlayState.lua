@@ -7,7 +7,7 @@ function PlayState:init(defs)
     canvasPositions = {}
     self.invisibleInk = false
     self.paused = false
-    inkAllowed = 1000
+    self.inkAllowed = 1000
     self.roundLimit = 2
     self.rounds = 1
     self.stopwatch = 1
@@ -39,17 +39,17 @@ function PlayState:enter(defs)
             self.invisibleink  = true
             self.limited = false
             self.leftHand = false
-            inkAllowed = 5000
+            self.inkAllowed = 5000
         elseif self.modifier == 'limited' then
             self.limited = true
             self.invisibleink = false
             self.leftHand = false
-            inkAllowed = 269    --GIGGITY GIGGITY
+            self.inkAllowed = 269    --GIGGITY GIGGITY
         elseif self.modifier == 'lefthand' then
             self.leftHand = true
             self.invisibleink = false
             self.limited = false
-            inkAllowed = 5000
+            self.inkAllowed = 5000
         end
     end
 end
@@ -87,7 +87,7 @@ function PlayState:update(dt)
             self.stopwatch = self.timelimit - self:round(self:milliseconds_to_seconds(love.timer.getTime() - self.start))
         end
 
-        if #cursorPositions > inkAllowed or self.stopwatch < 0 then
+        if #cursorPositions > self.inkAllowed or self.stopwatch < 0 then
             self.start = 0
             self.paused = true
         end

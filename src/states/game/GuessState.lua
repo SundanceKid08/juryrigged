@@ -4,7 +4,17 @@ GuessState = Class{__includes = BaseState}
 
 function GuessState:init()
     
-    
+    failureButton = Button((width/2) - 400 -100, height - 400 + 50, 100, 100, 'rectangle', function() 
+        gStateMachine:change('play',{
+            modifier = self.modifiers[love.math.random(1,3)]
+        })
+    end)
+
+    successButton = Button((width/2) + 400 + 100, height - 400 + 50, 100, 100, 'rectangle', function() 
+        gStateMachine:change('play',{
+            modifier = self.modifiers[love.math.random(1,3)]
+        })
+    end)
     --x,y = love.mouse.getPosition()
     --table.insert(cursorPositions, {x,y})
     
@@ -14,6 +24,8 @@ function GuessState:init()
     love.graphics.clear()
     love.graphics.setBlendMode('alpha')
     love.graphics.setCanvas()
+
+
 
     self.modifiers = {
         [1] = "invisible",
@@ -27,21 +39,8 @@ function GuessState:enter(def)
 end
 
 function GuessState:update(dt)
-    if self:isHover((width/2) - 400 -100, height - 400 + 50, 100, 100) then
-        if love.mouse.isDown(1) then
-            gStateMachine:change('play',{
-                modifier = self.modifiers[love.math.random(1,3)]
-            })
-        end
-    end
-
-    if self:isHover((width/2) + 400 + 100, height - 400 + 50, 100, 100) then
-        if love.mouse.isDown(1) then
-            gStateMachine:change('play',{
-                modifier = self.modifiers[love.math.random(1,3)]
-            })
-        end
-    end
+    failureButton:update(dt)
+    successButton:update(dt)
 end
 
 function GuessState:render()

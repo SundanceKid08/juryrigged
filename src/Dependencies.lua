@@ -9,6 +9,7 @@ Timer = require 'lib/knife.timer'
 
 require 'src/StateMachine'
 require 'src/Cards'
+require 'src/Button'
 
 --game states
 require 'src/states/BaseState'
